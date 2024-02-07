@@ -4,10 +4,10 @@ rng = np.random.default_rng(seed=0)
 
 image_size = [28, 28]
 
-train_x = []
-train_y = []
-test_x = []
-test_y = []
+train_x = np.array([])
+train_y = np.array([])
+test_x = np.array([])
+test_y = np.array([])
 
 
 """ make train image """
@@ -25,8 +25,8 @@ for i in range(N):
         r = int(rng.integers(0, image_size[0]+1-mini_bar_size, 1))
         c = int(rng.integers(0, image_size[1], 1))
         image[r:r+mini_bar_size, c] = 1
-    train_x.append(image)
-    train_y.append([0, 1])
+    train_x = np.append(train_x, image)
+    train_y = np.append(train_y, [0, 1])
 
 # not exist long bar
 count = 0
@@ -44,8 +44,8 @@ while(True):
     if image_size[1] in np.sum(image, axis=0):
         continue
     count = count + 1
-    train_x.append(image)
-    train_y.append([1, 0])
+    train_x = np.append(train_x, image)
+    train_y = np.append(train_y, [1, 0])
 
 
 """ make test image """
@@ -63,8 +63,8 @@ for i in range(N):
         r = int(rng.integers(0, image_size[0]+1-mini_bar_size, 1))
         c = int(rng.integers(0, image_size[1], 1))
         image[r:r+mini_bar_size, c] = 1
-    test_x.append(image)
-    test_y.append([0, 1])
+    test_x = np.append(test_x, image)
+    test_y = np.append(test_y, [0, 1])
 
 # not exist long bar
 count = 0
@@ -82,10 +82,20 @@ while(True):
     if image_size[1] in np.sum(image, axis=0):
         continue
     count = count + 1
-    test_x.append(image)
-    test_y.append([1, 0])
+    test_x = np.append(test_x, image)
+    test_y = np.append(test_y, [1, 0])
 
 
+""" shuffle """
+p = np.random.permutation(len(train_y))
+train_x = train_x[p]
+train_y = train_y[p]
+p = np.random.permutation(len(test_y))
+test_x = test_x[p]
+test_y = test_y[p]
+
+
+""" save """
 np.save('dataset/train_x', train_x)
 np.save('dataset/train_y', train_y)
 np.save('dataset/test_x', test_x)
